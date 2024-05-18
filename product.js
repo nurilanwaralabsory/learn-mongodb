@@ -61,19 +61,23 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-productSchema.methods.outStock = function () {
-  this.stock = 0;
-  this.availability.online = false;
-  this.availability.offline = false;
-  return this.save();
+productSchema.statics.closeStock = function () {
+  return this.updateMany(
+    {},
+    {
+      stock: 0,
+      "availability.online": false,
+      "availability.offline": false,
+    }
+  );
 };
 
 const Product = mongoose.model("Product", productSchema);
 
-const changeStock = async (id) => {
-  const foundProduct = await Product.findById(id);
-  await foundProduct.outStock();
-  console.log("Berhasil diubah");
-};
-
-changeStock("66484b10f1007d6207cca229");
+Product.closeStock()
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
