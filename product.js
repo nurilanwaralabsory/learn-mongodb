@@ -61,30 +61,19 @@ const productSchema = new mongoose.Schema({
   },
 });
 
+productSchema.methods.outStock = function () {
+  this.stock = 0;
+  this.availability.online = false;
+  this.availability.offline = false;
+  return this.save();
+};
+
 const Product = mongoose.model("Product", productSchema);
 
-Product.findOneAndUpdate(
-  { name: "Kemeja Flanel" },
-  {
-    name: "Kemeja Flanel",
-    brand: "Hollister",
-    price: -5000,
-    color: "biru muda",
-    size: ["S", "M", "L"],
-    description:
-      "Kemeja flanel dengan warna yang cerah, terbuat dari bahan flanel yang nyaman dan berkualitas tinggi.",
-    condition: "baru",
-    stock: 25,
-    availability: {
-      online: true,
-      offline: true,
-    },
-  },
-  { new: true, runValidators: true }
-)
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    console.log(err.errors.price.properties.message);
-  });
+const changeStock = async (id) => {
+  const foundProduct = await Product.findById(id);
+  await foundProduct.outStock();
+  console.log("Berhasil diubah");
+};
+
+changeStock("66484b10f1007d6207cca229");
