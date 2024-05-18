@@ -63,16 +63,28 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-const tshirt = new Product({
-  name: "T Shirt Raglan",
-  price: 50000,
-});
-
-tshirt
-  .save()
+Product.findOneAndUpdate(
+  { name: "Kemeja Flanel" },
+  {
+    name: "Kemeja Flanel",
+    brand: "Hollister",
+    price: 5000,
+    color: "biru muda",
+    size: ["S", "M", "L"],
+    description:
+      "Kemeja flanel dengan warna yang cerah, terbuat dari bahan flanel yang nyaman dan berkualitas tinggi.",
+    condition: "baru",
+    stock: 25,
+    availability: {
+      online: true,
+      offline: true,
+    },
+  },
+  { new: true, runValidators: true }
+)
   .then((result) => {
     console.log(result);
   })
   .catch((err) => {
-    console.log(err.message);
+    console.log(err);
   });
