@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
-    min: 0,
+    min: [0, "Nilai tidak boleh kurang dari 0"],
   },
   color: {
     type: String,
@@ -68,7 +68,7 @@ Product.findOneAndUpdate(
   {
     name: "Kemeja Flanel",
     brand: "Hollister",
-    price: 5000,
+    price: -5000,
     color: "biru muda",
     size: ["S", "M", "L"],
     description:
@@ -86,5 +86,5 @@ Product.findOneAndUpdate(
     console.log(result);
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err.errors.price.properties.message);
   });
